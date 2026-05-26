@@ -1,0 +1,225 @@
+---
+title: "Class 11"
+author: "Christeena Pano (PID: A17842498)"
+date: 05/07/2026
+format: pdf
+---
+
+## Custom analysis of resulting models
+
+Read the results of the more complicated HIV-Pr dimer AlphaFold2 models into R with the help of the Bio3D package
+
+```{r}
+# Change this for YOUR results dir name
+results_dir <- "hivprdimer_23119/" 
+```
+
+```{r}
+# File names for all PDB models
+pdb_files <- list.files(path=results_dir,
+                        pattern="*.pdb",
+                        full.names = TRUE)
+
+# Print our PDB file names
+basename(pdb_files)
+```
+
+```{r}
+library(bio3d)
+
+# Read all data from Models 
+#  and superpose/fit coords
+pdbs <- pdbaln(pdb_files, fit=TRUE, exefile="msa")
+```
+
+```{r}
+pdbs
+```
+
+```{r}
+# RMSD is a standard measure of structural distance between coordinate sets. Use the rmsd() function to calculate the RMSD between all pairs models.
+rd <- rmsd(pdbs, fit=T)
+
+range(rd)
+```
+
+```{r}
+# Draw a heatmap of these RMSD matrix values
+
+library(pheatmap)
+
+colnames(rd) <- paste0("m",1:5)
+rownames(rd) <- paste0("m",1:5)
+pheatmap(rd)
+```
+
+```{r}
+# Read a reference PDB structure
+pdb <- read.pdb("1hsg")
+```
+
+```{r}
+# Obtain secondary structure from a call to stride() or dssp() on any of the model structures
+plotb3(pdbs$b[1,], typ="l", lwd=2, sse=pdb)
+points(pdbs$b[2,], typ="l", col="red")
+points(pdbs$b[3,], typ="l", col="blue")
+points(pdbs$b[4,], typ="l", col="darkgreen")
+points(pdbs$b[5,], typ="l", col="orange")
+abline(v=100, col="gray")
+```
+
+```{r}
+# Use the core.find() function to find the most consistent “rigid core” common across all the models
+core <- core.find(pdbs)
+```
+
+```{r}
+# Use the identified core atom positions as a basis for a superposition and write out fitted structures to a directory called corefit_structure
+core.inds <- print(core, vol=0.5)
+```
+
+```{r}
+xyz <- pdbfit(pdbs, core.inds, outpath="corefit_structures")
+```
+
+RMSF is an often used measure of conformational variance along the structure
+
+```{r}
+# Explore RMSF between positions of the structure
+rf <- rmsf(xyz)
+
+plotb3(rf, sse=pdb)
+abline(v=100, col="gray", ylab="RMSF")
+```
+
+Independent of the 3D structure, AlphaFold produces an output called Predicted Aligned Error (PAE). This is detailed in the JSON format result files, one for each model structure.
+
+```{r}
+# read these files and see that AlphaFold produces a useful inter-domain prediction for models 1 and 2.
+library(jsonlite)
+
+# Listing of all PAE JSON files
+pae_files <- list.files(path=results_dir,
+                        pattern=".*model.*\\.json",
+                        full.names = TRUE)
+```
+
+```{r}
+# Read the 1st-5th file
+pae1 <- read_json(pae_files[1],simplifyVector = TRUE)
+pae2 <- read_json(pae_files[2],simplifyVector = TRUE)
+pae3 <- read_json(pae_files[3],simplifyVector = TRUE)
+pae4 <- read_json(pae_files[4],simplifyVector = TRUE)
+pae5 <- read_json(pae_files[5],simplifyVector = TRUE)
+
+attributes(pae1)
+```
+
+```{r}
+# Per-residue pLDDT scores 
+#  same as B-factor of PDB..
+head(pae1$plddt) 
+```
+
+```{r}
+# Find max PAE scores
+pae1$max_pae
+pae2$max_pae
+pae3$max_pae
+pae4$max_pae
+pae5$max_pae
+```
+We can plot the N by N (where N is the number of residues) PAE scores with ggplot or with functions from the Bio3D package
+
+```{r}
+# Plot the N by N PAE scores
+plot.dmat(pae1$pae, 
+          xlab="Residue Position (i)",
+          ylab="Residue Position (j)")
+```
+
+```{r}
+plot.dmat(pae1$pae, 
+          xlab="Residue Position (i)",
+          ylab="Residue Position (j)",
+          grid.col = "black",
+          zlim=c(0,30))
+```
+
+```{r}
+plot.dmat(pae2$pae, 
+          xlab="Residue Position (i)",
+          ylab="Residue Position (j)",
+          grid.col = "black",
+          zlim=c(0,30))
+```
+
+```{r}
+plot.dmat(pae3$pae, 
+          xlab="Residue Position (i)",
+          ylab="Residue Position (j)",
+          grid.col = "black",
+          zlim=c(0,30))
+```
+
+```{r}
+plot.dmat(pae4$pae, 
+          xlab="Residue Position (i)",
+          ylab="Residue Position (j)",
+          grid.col = "black",
+          zlim=c(0,30))
+```
+
+```{r}
+plot.dmat(pae5$pae, 
+          xlab="Residue Position (i)",
+          ylab="Residue Position (j)",
+          grid.col = "black",
+          zlim=c(0,30))
+```
+
+## Residue conservation from alignment file
+
+```{r}
+# Read alignment file from Alphafold2 results to analyze residue conservation
+aln_file <- list.files(path=results_dir,
+                       pattern=".a3m$",
+                        full.names = TRUE)
+aln_file
+```
+
+```{r}
+# Read first alignment file as fasta object
+aln <- read.fasta(aln_file[1], to.upper = TRUE)
+```
+
+```{r}
+# Check number of sequences in the alignment
+dim(aln$ali)
+```
+
+```{r}
+# Use the conserv() function to score residue conservation in the alignment
+sim <- conserv(aln)
+
+# Plot results 
+plotb3(sim[1:99], sse=trim.pdb(pdb, chain="A"),
+       ylab="Conservation Score")
+```
+
+```{r}
+# Generate consensus sequence with high cutoff value
+con <- consensus(aln, cutoff = 0.9)
+con$seq
+```
+
+we can map this conservation score to the Occupancy column of a PDB file for viewing in molecular viewer programs such as Mol*
+
+```{r}
+m1.pdb <- read.pdb(pdb_files[1])
+occ <- vec2resno(c(sim[1:99], sim[1:99]), m1.pdb$atom$resno)
+write.pdb(m1.pdb, o=occ, file="m1_conserv.pdb")
+```
+
+
+
