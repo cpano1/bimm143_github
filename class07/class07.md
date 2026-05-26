@@ -63,16 +63,16 @@ km
 
     Cluster means:
               x         y
-    1  2.936122 -2.799761
-    2 -2.799761  2.936122
+    1 -2.963111  3.125384
+    2  3.125384 -2.963111
 
     Clustering vector:
-     [1] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1
-    [39] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+     [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2
+    [39] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
 
     Within cluster sum of squares by cluster:
-    [1] 47.62388 47.62388
-     (between_SS / total_SS =  91.2 %)
+    [1] 61.58238 61.58238
+     (between_SS / total_SS =  90.0 %)
 
     Available components:
 
@@ -109,8 +109,8 @@ km$size
 km$cluster
 ```
 
-     [1] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1
-    [39] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+     [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2
+    [39] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
 
 > **Q**. What “component of your result object details cluster center?
 
@@ -119,8 +119,8 @@ km$centers
 ```
 
               x         y
-    1  2.936122 -2.799761
-    2 -2.799761  2.936122
+    1 -2.963111  3.125384
+    2  3.125384 -2.963111
 
 > **Q**. Plot `z` colored by the kmeans cluster assignment and add
 > cluster centers as blue points
@@ -202,8 +202,8 @@ we can *“cut”* the tree to reveal the clustering pattern.
 cutree(hc, h=4)
 ```
 
-     [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2
-    [39] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+     [1] 1 1 1 1 1 2 1 2 1 2 1 1 2 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 2 2 3 3 4 4 4 4 4 4
+    [39] 4 3 4 4 4 4 4 4 4 3 4 4 3 4 3 4 3 4 4 4 4 4
 
 > Q. Make a plot of `z` with your hclust results (i. e. colored by
 > cluster membership)
