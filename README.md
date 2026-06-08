@@ -20,7 +20,7 @@ Class 10: [Structural Bioinformatics](class10/class10.md)
 
 Class 11: [Protein Structure Prediction with AlphaFold](class11/class11.md)
 
-Class 12: [Population Analysis](class12/class12.md)
+Class 12: [Population Analysis](class12/homework12.md)
 
 Class 13: [RNASeq Analysis with DESeq](class13/class13.md)
 
