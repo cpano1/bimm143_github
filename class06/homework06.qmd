@@ -1,0 +1,41 @@
+---
+title: "Homework 6"
+author: "Christeena Pano (PID: A7842497)"
+format: pdf
+---
+
+```{r}
+library(bio3d) 
+```
+
+## Comments from rubric
+
+> *Inputs to the function*: The protein ID from the Protein Data Bank (PDB)
+
+> *What the function does and how to use it*: This function uses the protein ID to analyze proteins by trimming them to a specific chain (A) and atom/element type (CA), and reading their b-factor values. This is used to generate a plot from any PDB ID, with the specific characteristics wanted. This function is used by using the function `pdb.plot` and using the `PDB ID` as the input. 
+
+> *Output of the function*: The output of the function is a b-factor plot as well as the b-factor data in the form of a vector. 
+
+```{r}
+pdb.plot <- function(pdb_id) {
+
+  structure <- read.pdb(pdb_id)
+  
+  structure.trim <- trim.pdb(structure, chain = "A", elety = "CA")
+  
+  b <- structure.trim$atom$b
+  
+  plotb3(b, sse = structure.trim, typ = "l", ylab = "B-factor")
+  
+  return(b)
+}
+```
+
+## Function works and correct output is produced
+
+```{r}
+pdb.plot("4AKE")
+```
+
+
+
