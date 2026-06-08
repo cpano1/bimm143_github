@@ -215,11 +215,11 @@ active.site <- atom.select(pdb, resno=25)
 #| eval: !expr knitr::is_html_output()
 
 #view.pdb(pdb, 
-         cols= c("red", "blue"), 
-         highlight = active.site,
-         highlight.style = "spacefill", 
-         backgroundColor= "pink") |>
-  setRock()
+         #cols= c("red", "blue"), 
+         #highlight = active.site,
+         #ighlight.style = "spacefill", 
+         #backgroundColor= "pink") |>
+  #setRock()
 ```
 
 ## Predict the flexibility of a given structure
@@ -242,7 +242,7 @@ View the results with an interactive structure view
 # Create interactive structure using view.nma()
 #| eval: !expr knitr::is_html_output()
 
-view.nma(m)
+#view.nma(m)
 ```
 
 Write out the results for viewing in Mol-star: 
@@ -298,37 +298,20 @@ hits$pdb.id
 
 ```{r}
 # Download releated PDB files
-files <- get.pdb(hits$pdb.id, path="pdbs", split=TRUE, gzip=TRUE)
+#files <- get.pdb(hits$pdb.id, path="pdbs", split=TRUE, gzip=TRUE)
 ```
 
 ```{r}
 # Align releated PDBs
-pdbs <- pdbaln(files, fit = TRUE, exefile="msa")
+#pdbs <- pdbaln(files, fit = TRUE, exefile="msa")
 ```
 
 ```{r}
-pdbs
+#pdbs
 ```
 
 Quick interactive structure view
 
-```{r}
-# Quick interactive structure view
-#| eval: !expr knitr::is_html_output()
-
-#view.pdbs(pdbs)
-```
-
-```{r}
-# Vector containing PDB database codes
-ids <- basename.pdb(pdbs$id)
-
-anno <- pdb.annotate(ids)
-unique(anno$source)
-```
-```{r}
-anno
-```
 
 ## Principal Component Analysis
 
@@ -336,14 +319,11 @@ PCA of all this structural data (x, y and z atom coordinates):
 
 ```{r}
 # Perform PCA
-pc <- pca(pdbs)
-plot(pc)
+#pc <- pca(pdbs)
+#plot(pc)
 ```
 
-```{r}
-# Create plot with PC 1 and 2
-plot(pc, 1:2)
-```
+
 
 Interactive view of the PC1 captured structural differences: 
 
@@ -353,21 +333,5 @@ Interactive view of the PC1 captured structural differences:
 #| eval: !expr knitr::is_html_output()
 
 #view.pca(pc)
-```
-```{r}
-# Calculate RMSD
-rd <- rmsd(pdbs)
-
-# Structure-based clustering
-hc.rd <- hclust(dist(rd))
-grps.rd <- cutree(hc.rd, k=3)
-
-plot(pc, 1:2, col="grey50", bg=grps.rd, pch=21, cex=1)
-```
-
-
-```{r}
-# Visualize first principal component
-pc1 <- mktrj(pc, pc=1, file="pca.pdb")
 ```
 
