@@ -8,9 +8,9 @@ Class 4: [Introduction to R](Lab04/Lab04.pdf)
 
 Class 5: [Data vis with ggplot2](class05/class05)
 
-Class 6: [R functions](class06/class06)
+Class 6: [R functions](class06/homework06.html)
 
-Class 7: [Introduction to machine learniing](class07/class07)
+Class 7: [Introduction to machine learniing](class07/class07.md)
 
 Class 8: [Breast Cancer Mini Project](class08/class08.md)
 
